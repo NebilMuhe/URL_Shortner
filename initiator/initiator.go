@@ -7,6 +7,7 @@ import (
 	"os"
 	"os/signal"
 	"syscall"
+	persistencedb "url_shortener/internal/constant/model/persistenceDB"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -22,31 +23,31 @@ func Initiator() {
 	log.Info(context.Background(), "config initialized")
 
 	log.Info(context.Background(), "initializing database")
-	InitDB(context.Background(), Options{
+	pool := InitDB(context.Background(), Options{
 		Url:             viper.GetString("db.url"),
 		MaxConnIdleTime: viper.GetDuration("db.max_idle_time"),
 	}, log)
 	log.Info(context.Background(), "database initialized")
 
 	log.Info(context.Background(), "intializing persistence layer")
-	InitPersistence()
+	persistence := InitPersistence(persistencedb.New(pool, log), log)
 	log.Info(context.Background(), "persistence layer initialized")
 
 	log.Info(context.Background(), "initializing module layer")
-	InitModule()
+	module := InitModule(persistence, log)
 	log.Info(context.Background(), "module layer initialized")
 
 	log.Info(context.Background(), "initializing handler layer")
-	InitHandler()
+	handler := InitHandler(module, log)
 	log.Info(context.Background(), "handler layer initialized")
 
 	log.Info(context.Background(), "initializing routes")
-	InitRoute()
+	gin_server := gin.Default()
+	v1 := gin_server.Group("/v1")
+	InitRoute(v1, handler)
 	log.Info(context.Background(), "route initialized")
 
 	log.Info(context.Background(), "initializing server")
-	gin_server := gin.Default()
-
 	server := &http.Server{
 		Addr:              viper.GetString("server.host") + ":" + viper.GetString("server.port"),
 		ReadTimeout:       viper.GetDuration("server.read_timeout"),
