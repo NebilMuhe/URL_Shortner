@@ -59,3 +59,40 @@ func (u *URL) GetURL(ctx *gin.Context) {
 
 	ctx.Redirect(http.StatusOK, res.OriginalURL)
 }
+
+func (u *URL) GetURLDetails(ctx *gin.Context) {
+	c, cancel := context.WithTimeout(ctx, u.timeout)
+	defer cancel()
+
+	short_code := ctx.Param("short_code")
+	res, err := u.module.GetURLDetails(c, short_code)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, res)
+}
+
+func (u *URL) UpdateURL(ctx *gin.Context) {
+	c, cancel := context.WithTimeout(ctx, u.timeout)
+	defer cancel()
+
+	var urlRequest dto.URLRequest
+
+	short_code := ctx.Param("short_code")
+
+	if err := ctx.ShouldBind(&urlRequest); err != nil {
+		u.log.Info(c, "failed to bind request", zap.Error(err))
+		ctx.Error(err)
+		return
+	}
+
+	res, err := u.module.UpdateURL(c, short_code, urlRequest)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, res)
+}

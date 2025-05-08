@@ -48,3 +48,20 @@ func (u *URL) GetURL(ctx context.Context, shortCode string) (*dto.URLResponse, e
 
 	return urlResponse, nil
 }
+
+func (u *URL) GetURLDetails(ctx context.Context, shortCode string) (*dto.URLResponse, error) {
+	res, err := u.urlPersistence.GetURLDetails(ctx, shortCode)
+	if err != nil {
+		return nil, err
+	}
+
+	return res, nil
+}
+
+func (u *URL) UpdateURL(ctx context.Context,shortCode string,req dto.URLRequest) (*dto.URLResponse,error) {
+	url,err := u.urlPersistence.UpdateURL(ctx,shortCode,req)
+	if err != nil {
+		return nil,err
+	}
+	return url,nil
+}
