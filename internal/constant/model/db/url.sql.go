@@ -35,9 +35,20 @@ func (q *Queries) CreateURL(ctx context.Context, arg CreateURLParams) (Url, erro
 	return i, err
 }
 
+const deleteURL = `-- name: DeleteURL :exec
+UPDATE urls
+SET deleted_at = Now()
+WHERE short_code = $1
+`
+
+func (q *Queries) DeleteURL(ctx context.Context, shortCode string) error {
+	_, err := q.db.Exec(ctx, deleteURL, shortCode)
+	return err
+}
+
 const getURLByShortCode = `-- name: GetURLByShortCode :one
 SELECT id, original_url, short_code, count, created_at, deleted_at, updated_at FROM urls 
-WHERE short_code = $1
+WHERE short_code = $1 and deleted_at IS NULL
 `
 
 func (q *Queries) GetURLByShortCode(ctx context.Context, shortCode string) (Url, error) {
@@ -58,7 +69,7 @@ func (q *Queries) GetURLByShortCode(ctx context.Context, shortCode string) (Url,
 const updateCount = `-- name: UpdateCount :one
 UPDATE urls
 SET count = count + 1
-WHERE short_code = $1
+WHERE short_code = $1 and deleted_at IS NULL
 RETURNING id, original_url, short_code, count, created_at, deleted_at, updated_at
 `
 
@@ -80,7 +91,7 @@ func (q *Queries) UpdateCount(ctx context.Context, shortCode string) (Url, error
 const updateURL = `-- name: UpdateURL :one
 UPDATE urls
 SET original_url = $1 and updated_at = NOW()
-WHERE short_code = $2
+WHERE short_code = $2 and deleted_at IS NULL
 RETURNING id, original_url, short_code, count, created_at, deleted_at, updated_at
 `
 

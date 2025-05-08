@@ -10,4 +10,5 @@ type URL interface {
 	GetURL(ctx context.Context, shortCode string) (*dto.URLResponse, error)
 	GetURLDetails(ctx context.Context, shortCode string) (*dto.URLResponse, error)
 	UpdateURL(ctx context.Context,shortCode string,req dto.URLRequest) (*dto.URLResponse,error)
+	DeleteURL(ctx context.Context, shortCode string) error
 }

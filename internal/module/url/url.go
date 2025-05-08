@@ -58,10 +58,22 @@ func (u *URL) GetURLDetails(ctx context.Context, shortCode string) (*dto.URLResp
 	return res, nil
 }
 
-func (u *URL) UpdateURL(ctx context.Context,shortCode string,req dto.URLRequest) (*dto.URLResponse,error) {
-	url,err := u.urlPersistence.UpdateURL(ctx,shortCode,req)
-	if err != nil {
-		return nil,err
+func (u *URL) UpdateURL(ctx context.Context, shortCode string, req dto.URLRequest) (*dto.URLResponse, error) {
+	if err := req.Validate(); err != nil {
+		u.log.Info(ctx, "invalid input", zap.Error(err))
+		return nil, err
 	}
-	return url,nil
+	url, err := u.urlPersistence.UpdateURL(ctx, shortCode, req)
+	if err != nil {
+		return nil, err
+	}
+	return url, nil
+}
+
+func (u *URL) DeleteURL(ctx context.Context, shortCode string) error {
+	if err := u.urlPersistence.DeleteURL(ctx, shortCode); err != nil {
+		return err
+	}
+
+	return nil
 }
