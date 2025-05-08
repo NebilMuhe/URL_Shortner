@@ -59,3 +59,41 @@ func (u *URL) GetURL(ctx context.Context, shortCode string) (*dto.URLResponse, e
 		DeletedAt:   url.DeletedAt,
 	}, nil
 }
+
+func (u *URL) GetURLDetails(ctx context.Context, shortCode string) (*dto.URLResponse, error) {
+	url, err := u.db.GetURLByShortCode(ctx, shortCode)
+	if err != nil {
+		u.log.Error(ctx, "failed to get url details", zap.Error(err))
+		return nil, err
+	}
+
+	return &dto.URLResponse{
+		ID:          url.ID,
+		OriginalURL: url.OriginalUrl,
+		ShortCode:   url.ShortCode,
+		Count:       url.Count.Int32,
+		CreatedAt:   url.CreatedAt,
+		UpdatedAt:   url.UpdatedAt,
+		DeletedAt:   url.DeletedAt,
+	}, nil
+}
+
+func (u *URL) UpdateURL(ctx context.Context, shortCode string, req dto.URLRequest) (*dto.URLResponse, error) {
+	url, err := u.db.UpdateURL(ctx, db.UpdateURLParams{
+		OriginalUrl: req.OriginalURL,
+		ShortCode:   shortCode,
+	})
+	if err != nil {
+		u.log.Error(ctx, "failed to update url", zap.Error(err))
+		return nil, err
+	}
+	return &dto.URLResponse{
+		ID:          url.ID,
+		OriginalURL: url.OriginalUrl,
+		ShortCode:   url.ShortCode,
+		Count:       url.Count.Int32,
+		CreatedAt:   url.CreatedAt,
+		UpdatedAt:   url.UpdatedAt,
+		DeletedAt:   url.DeletedAt,
+	}, nil
+}
