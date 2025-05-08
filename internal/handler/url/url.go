@@ -44,3 +44,18 @@ func (u *URL) CreateURL(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusCreated, response)
 }
+
+func (u *URL) GetURL(ctx *gin.Context) {
+	c, cancel := context.WithTimeout(ctx, u.timeout)
+	defer cancel()
+
+	short_code := ctx.Param("short_code")
+
+	res, err := u.module.GetURL(c, short_code)
+	if err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	ctx.Redirect(http.StatusOK, res.OriginalURL)
+}
