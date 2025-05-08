@@ -26,7 +26,7 @@ func InitURLPersistence(db persistencedb.PersistenceDB, log logger.Logger) stora
 func (u *URL) CreateURL(ctx context.Context, urlRequest dto.URLRequest) (*dto.URLResponse, error) {
 	url, err := u.db.CreateURL(ctx, db.CreateURLParams{
 		OriginalUrl: urlRequest.OriginalURL,
-		ShortCode: urlRequest.ShortCode,
+		ShortCode:   urlRequest.ShortCode,
 	})
 
 	if err != nil {
@@ -40,5 +40,22 @@ func (u *URL) CreateURL(ctx context.Context, urlRequest dto.URLRequest) (*dto.UR
 		Count:       url.Count.Int32,
 		CreatedAt:   url.CreatedAt,
 		UpdatedAt:   url.UpdatedAt,
+	}, nil
+}
+
+func (u *URL) GetURL(ctx context.Context, shortCode string) (*dto.URLResponse, error) {
+	url, err := u.db.UpdateCount(ctx, shortCode)
+	if err != nil {
+		u.log.Error(ctx, "failed to get url", zap.Error(err))
+		return nil, err
+	}
+	return &dto.URLResponse{
+		ID:          url.ID,
+		OriginalURL: url.OriginalUrl,
+		ShortCode:   url.ShortCode,
+		Count:       url.Count.Int32,
+		CreatedAt:   url.CreatedAt,
+		UpdatedAt:   url.UpdatedAt,
+		DeletedAt:   url.DeletedAt,
 	}, nil
 }

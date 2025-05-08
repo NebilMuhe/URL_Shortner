@@ -4,4 +4,5 @@ import "github.com/gin-gonic/gin"
 
 type URL interface {
 	CreateURL(ctx *gin.Context)
+	GetURL(ctx *gin.Context)
 }

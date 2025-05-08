@@ -39,3 +39,12 @@ func (u URL) CreateURL(ctx context.Context, urlRequest dto.URLRequest) (*dto.URL
 
 	return res, nil
 }
+
+func (u *URL) GetURL(ctx context.Context, shortCode string) (*dto.URLResponse, error) {
+	urlResponse, err := u.urlPersistence.GetURL(ctx, shortCode)
+	if err != nil {
+		return nil, err
+	}
+
+	return urlResponse, nil
+}

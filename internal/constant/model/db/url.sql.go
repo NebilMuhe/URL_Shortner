@@ -34,3 +34,45 @@ func (q *Queries) CreateURL(ctx context.Context, arg CreateURLParams) (Url, erro
 	)
 	return i, err
 }
+
+const getURLByShortCode = `-- name: GetURLByShortCode :one
+SELECT id, original_url, short_code, count, created_at, deleted_at, updated_at FROM urls 
+WHERE short_code = $1
+`
+
+func (q *Queries) GetURLByShortCode(ctx context.Context, shortCode string) (Url, error) {
+	row := q.db.QueryRow(ctx, getURLByShortCode, shortCode)
+	var i Url
+	err := row.Scan(
+		&i.ID,
+		&i.OriginalUrl,
+		&i.ShortCode,
+		&i.Count,
+		&i.CreatedAt,
+		&i.DeletedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
+
+const updateCount = `-- name: UpdateCount :one
+UPDATE urls
+SET count = count + 1
+WHERE short_code = $1
+RETURNING id, original_url, short_code, count, created_at, deleted_at, updated_at
+`
+
+func (q *Queries) UpdateCount(ctx context.Context, shortCode string) (Url, error) {
+	row := q.db.QueryRow(ctx, updateCount, shortCode)
+	var i Url
+	err := row.Scan(
+		&i.ID,
+		&i.OriginalUrl,
+		&i.ShortCode,
+		&i.Count,
+		&i.CreatedAt,
+		&i.DeletedAt,
+		&i.UpdatedAt,
+	)
+	return i, err
+}
