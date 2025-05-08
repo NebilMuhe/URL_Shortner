@@ -96,3 +96,16 @@ func (u *URL) UpdateURL(ctx *gin.Context) {
 
 	ctx.JSON(http.StatusOK, res)
 }
+
+func (u *URL) DeleteURL(ctx *gin.Context) {
+	c, cancel := context.WithTimeout(ctx, u.timeout)
+	defer cancel()
+
+	short_code := ctx.Param("short_code")
+	if err := u.module.DeleteURL(c, short_code); err != nil {
+		ctx.Error(err)
+		return
+	}
+
+	ctx.JSON(http.StatusOK, nil)
+}

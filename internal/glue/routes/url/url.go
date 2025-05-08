@@ -34,6 +34,12 @@ func InitRoute(group *gin.RouterGroup, url handler.URL) {
 			Handler:     url.UpdateURL,
 			Middlewares: []gin.HandlerFunc{},
 		},
+		{
+			Path:        "/url/:short_code",
+			Method:      http.MethodDelete,
+			Handler:     url.DeleteURL,
+			Middlewares: []gin.HandlerFunc{},
+		},
 	}
 
 	routes.RegisterRoutes(group, urlRoutes)

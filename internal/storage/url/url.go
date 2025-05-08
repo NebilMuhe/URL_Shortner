@@ -97,3 +97,11 @@ func (u *URL) UpdateURL(ctx context.Context, shortCode string, req dto.URLReques
 		DeletedAt:   url.DeletedAt,
 	}, nil
 }
+
+func (u *URL) DeleteURL(ctx context.Context,shortCode string) error{
+	if err := u.db.DeleteURL(ctx,shortCode); err != nil {
+		u.log.Error(ctx,"failed to delete url",zap.Error(err))
+		return err
+	}
+	return nil
+}

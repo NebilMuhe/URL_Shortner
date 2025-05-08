@@ -7,4 +7,5 @@ type URL interface {
 	GetURL(ctx *gin.Context)
 	GetURLDetails(ctx *gin.Context)
 	UpdateURL(ctx *gin.Context)
+	DeleteURL(ctx *gin.Context)
 }
