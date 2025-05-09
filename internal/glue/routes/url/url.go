@@ -3,12 +3,12 @@ package url
 import (
 	"net/http"
 	"url_shortener/internal/glue/routes"
-	"url_shortener/internal/handler"
+	"url_shortener/internal/handler/rest"
 
 	"github.com/gin-gonic/gin"
 )
 
-func InitRoute(group *gin.RouterGroup, url handler.URL) {
+func InitRoute(group *gin.RouterGroup, url rest.URL) {
 	urlRoutes := []routes.Routes{
 		{
 			Path:        "/url",

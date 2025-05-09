@@ -1,13 +1,13 @@
 package initiator
 
 import (
-	"url_shortener/internal/handler"
-	"url_shortener/internal/handler/url"
+	"url_shortener/internal/handler/rest"
+	"url_shortener/internal/handler/rest/gin/url"
 	"url_shortener/platform/logger"
 )
 
 type Handler struct {
-	urlHandler handler.URL
+	urlHandler rest.URL
 }
 
 func InitHandler(module Module, log logger.Logger) Handler {
