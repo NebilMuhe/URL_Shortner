@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"time"
+	"url_shortener/internal/constant/errors"
 	"url_shortener/internal/constant/model/dto"
 	"url_shortener/internal/handler/rest"
 	"url_shortener/internal/module"
@@ -31,6 +32,7 @@ func (u *URL) CreateURL(ctx *gin.Context) {
 	defer cancel()
 	var createUrl dto.URLRequest
 	if err := ctx.ShouldBind(&createUrl); err != nil {
+		err = errors.ErrInvalidUserInput.Wrap(err,"invalid input")
 		u.log.Info(ctx, "failed to bind create url request", zap.Error(err))
 		ctx.Error(err)
 		return
@@ -50,7 +52,6 @@ func (u *URL) GetURL(ctx *gin.Context) {
 	defer cancel()
 
 	short_code := ctx.Param("short_code")
-
 	res, err := u.module.GetURL(c, short_code)
 	if err != nil {
 		ctx.Error(err)
@@ -81,8 +82,8 @@ func (u *URL) UpdateURL(ctx *gin.Context) {
 	var urlRequest dto.URLRequest
 
 	short_code := ctx.Param("short_code")
-
 	if err := ctx.ShouldBind(&urlRequest); err != nil {
+		err = errors.ErrInvalidUserInput.Wrap(err,"invalid input")
 		u.log.Info(c, "failed to bind request", zap.Error(err))
 		ctx.Error(err)
 		return
