@@ -5,7 +5,7 @@ import (
 	"net/http"
 	"time"
 	"url_shortener/internal/constant/model/dto"
-	"url_shortener/internal/handler"
+	"url_shortener/internal/handler/rest"
 	"url_shortener/internal/module"
 	"url_shortener/platform/logger"
 
@@ -19,7 +19,7 @@ type URL struct {
 	timeout time.Duration
 }
 
-func InitURLHandler(urlModule module.URL, log logger.Logger) handler.URL {
+func InitURLHandler(urlModule module.URL, log logger.Logger) rest.URL {
 	return &URL{
 		log:    log,
 		module: urlModule,
