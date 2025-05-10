@@ -13,33 +13,46 @@ This project follows the Hexagonal Architecture (also known as Ports and Adapter
 
 ```
 .
-├── cmd/                      # Application entry points
-|   └── main.go               # Main entry point of the application
-├── config/                   # Configuration management
-|   └── sqlc.yaml             # Defines how SQL queries are compiled into Go code using sqlc
-|   └── config.yaml           # Centralized configuration file for application settings
-├── internal/                 # Private application code
-│   ├── handler/              # Handles HTTP requests and orchestrates use cases
-|   |   └── middleware        # Contains reusable functions that intercept and process HTTP requests and responses
-|   |   └── rest              # Contains HTTP handlers
-|   |       └── gin           # Contains Gin-based HTTP handlers
-|   |       └── handler.go    # Contains handlers interface
-│   ├── module/               # Core business logic and entities
-|   |   └── handler.go        # Contains modules interface
-│   └── storage/              # Persistence layer for database interactions
-|       └── storage.go        # Contains storages interface  
-├── platform/                 # Platform-specific code
-|   ├── logger/               # Logging(e.g., Zap integration)
-|   └── utils/                # Utility functions (e.g., helpers functions)
-└── initiator/                # Application initialization
-    └── config.go             # Intialization of configuration
-    └── db.go                 # Intializtion of database
-    └── handler.go            # Intialization of handler layer
-    └── initiato.go           # Sets up and wires dependencies before the application starts running
-    └── logger.go             # Initialization of logger(eg. zap)
-    └── module.go             # Initializtion of module layer
-    └── persistence.go        # Initializtion of persistence layer
-    └── routes.go             # Initialization of routes
+├── cmd/                               # Application entry points
+|   └── main.go                        # Main entry point of the application
+├── config/                            # Configuration management
+|   └── sqlc.yaml                      # Defines how SQL queries are compiled into Go code using sqlc
+|   └── config.yaml                    # Centralized configuration file for application settings
+├── internal/                          # Private application code
+|   ├── constant/                      # To define and organize application-wide constant value
+|   |   └── errors/                    # To define proper error messages
+|   |   └── models/                    # To define the core data structures (types)
+|   |   |   └── db/                    # Contains generated code using sqlc
+|   |   |   └── dto/                   # Defines data transfer objects
+|   |   |   └── persistenceDB/         # Encapsulate logic to interact to database
+|   |   |   └── response/              # Defines API response format that application returns, including success and error response.
+|   |   └── query/                     # To define the raw sql files
+|   |       └── queries/               # To define raw sql queries 
+|   |       └── schemas/               # To define raw sql schemas
+|   ├── glue/                          # To connect to different layer of application
+|   |   └── routes/                    # To define routing logic
+│   ├── handler/                       # Handles HTTP requests and orchestrates use cases
+|   |   └── middleware                 # Contains reusable functions that intercept and process HTTP requests and responses
+|   |   |   └── errorMiddleware.go     # To handle errors in a centralized way
+|   |   └── rest                       # Contains HTTP handlers
+|   |       └── gin                    # Contains Gin-based HTTP handlers
+|   |       └── handler.go             # Contains handlers interface
+│   ├── module/                        # Core business logic and entities
+|   |   └── handler.go                 # Contains modules interface
+│   └── storage/                       # Persistence layer for database interactions
+|       └── storage.go                 # Contains storages interface  
+├── platform/                          # Platform-specific code
+|   ├── logger/                        # Logging(e.g., Zap integration)
+|   └── utils/                         # Utility functions (e.g., helpers functions)
+└── initiator/                         # Application initialization
+    └── config.go                      # Intialization of configuration
+    └── db.go                          # Intializtion of database
+    └── handler.go                     # Intialization of handler layer
+    └── initiato.go                    # Sets up and wires dependencies before the application starts running
+    └── logger.go                      # Initialization of logger(eg. zap)
+    └── module.go                      # Initializtion of module layer
+    └── persistence.go                 # Initializtion of persistence layer
+    └── routes.go                      # Initialization of routes
 ```
 
 ## 🚀 Features
@@ -59,6 +72,7 @@ This project follows the Hexagonal Architecture (also known as Ports and Adapter
 - **Gin**: Web framework
 - **CockroachDB**: Database
 - **pgx**: PostgreSQL driver
+- **errorx**: Consistent error handling
 - **Zap**: Structured logging
 - **Viper**: Configuration management
 - **Ozzo Validation**: Input validation
