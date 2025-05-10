@@ -87,7 +87,7 @@ This project follows the Hexagonal Architecture (also known as Ports and Adapter
 
 1. Clone the repository:
    ```bash
-   git clone <repository-url>
+   git clone https://github.com/NebilMuhe/URL_Shortner.git
    cd url_shortener
    ```
 
