@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"syscall"
 	persistencedb "url_shortener/internal/constant/model/persistenceDB"
+	"url_shortener/internal/handler/middleware"
 
 	"github.com/gin-gonic/gin"
 	"github.com/spf13/viper"
@@ -44,6 +45,7 @@ func Initiator() {
 	log.Info(context.Background(), "initializing routes")
 	gin_server := gin.Default()
 	v1 := gin_server.Group("/v1")
+	gin_server.Use(middleware.ErrorHandler())
 	InitRoute(v1, handler)
 	log.Info(context.Background(), "route initialized")
 

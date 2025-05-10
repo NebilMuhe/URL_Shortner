@@ -2,6 +2,7 @@ package url
 
 import (
 	"context"
+	"url_shortener/internal/constant/errors"
 	"url_shortener/internal/constant/model/dto"
 	"url_shortener/internal/module"
 	"url_shortener/internal/storage"
@@ -25,6 +26,7 @@ func InitURLModule(urlStorage storage.URL, log logger.Logger) module.URL {
 
 func (u URL) CreateURL(ctx context.Context, urlRequest dto.URLRequest) (*dto.URLResponse, error) {
 	if err := urlRequest.Validate(); err != nil {
+		err = errors.ErrInvalidUserInput.Wrap(err, "invalid input")
 		u.log.Info(ctx, "invalid url request", zap.Error(err))
 		return nil, err
 	}
@@ -60,6 +62,7 @@ func (u *URL) GetURLDetails(ctx context.Context, shortCode string) (*dto.URLResp
 
 func (u *URL) UpdateURL(ctx context.Context, shortCode string, req dto.URLRequest) (*dto.URLResponse, error) {
 	if err := req.Validate(); err != nil {
+		err = errors.ErrInvalidUserInput.Wrap(err, "invalid input")
 		u.log.Info(ctx, "invalid input", zap.Error(err))
 		return nil, err
 	}
