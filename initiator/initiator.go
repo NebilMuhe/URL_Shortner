@@ -30,6 +30,14 @@ func Initiator() {
 	}, log)
 	log.Info(context.Background(), "database initialized")
 
+	log.Info(context.Background(), "initializing migration")
+	m := InitMigration(viper.GetString("migrations.file"), viper.GetString("db.url"), log)
+	log.Info(context.Background(), "migration initialized")
+
+	log.Info(context.Background(), "initializing up migration")
+	UpMigration(m, log)
+	log.Info(context.Background(), "Up migration initialized")
+
 	log.Info(context.Background(), "intializing persistence layer")
 	persistence := InitPersistence(persistencedb.New(pool, log), log)
 	log.Info(context.Background(), "persistence layer initialized")
