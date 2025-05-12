@@ -9,3 +9,5 @@ server:
 db:
   url: postgres://root@localhost:26257/defaultdb?sslmode=disable
   max_idle_time: 30s
+migrations:
+  file: internal/constant/query/schemas
