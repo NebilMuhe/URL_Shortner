@@ -13,10 +13,9 @@ import (
 )
 
 func InitMigration(path string, url string, logger logger.Logger) *migrate.Migrate {
-	databaseUrl := strings.Split(url, "://")
 	m, err := migrate.New(
 		fmt.Sprintf("file://%s", path),
-		fmt.Sprintf("cockroachdb://%s", databaseUrl[1]))
+		fmt.Sprintf("cockroachdb://%s", strings.Split(url, "://")[1]))
 	if err != nil {
 		logger.Fatal(context.Background(), "failed to migrate schema", zap.Error(err))
 	}
