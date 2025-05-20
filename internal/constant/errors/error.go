@@ -43,3 +43,10 @@ var Error = []ErrorType{
 		StatusCode: http.StatusNotFound,
 	},
 }
+
+var ErrorMap = map[*errorx.Type]int{
+	ErrInvalidUserInput: http.StatusBadRequest,
+	ErrDB:               http.StatusInternalServerError,
+	ErrDataExists:       http.StatusBadRequest,
+	ErrResourceNotFound: http.StatusNotFound,
+}
