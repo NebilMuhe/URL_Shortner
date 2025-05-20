@@ -32,20 +32,15 @@ func ErrorHandler() gin.HandlerFunc {
 }
 
 func CastErrorResponse(err error) *response.ErrorResponse {
-	for _, e := range errors.Error {
-		if errorx.IsOfType(err, e.ErrorType) {
-			er := errorx.Cast(err)
-			if err == nil {
-				return &response.ErrorResponse{
-					StausCode: http.StatusInternalServerError,
-					Message:   "internal server error",
-				}
-			}
-			return &response.ErrorResponse{
-				StausCode:  e.StatusCode,
-				Message:    er.Message(),
-				FieldError: FieldErrors(er.Cause()),
-			}
+	castedError := errorx.Cast(err)
+	if castedError == nil {
+		return nil
+	}
+	if code, ok := errors.ErrorMap[castedError.Type()]; ok {
+		return &response.ErrorResponse{
+			StausCode:  code,
+			Message:    castedError.Message(),
+			FieldError: FieldErrors(castedError.Cause()),
 		}
 	}
 	return nil
